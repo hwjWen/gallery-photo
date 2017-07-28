@@ -1,6 +1,5 @@
 require('normalize.css/normalize.css');
 require('styles/App.scss');
-// require('styles/app.css');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -74,6 +73,34 @@ var ImgFigure = React.createClass({
             </figcaption>
           </figure>
         );
+    }
+});
+/*控制组件*/
+var ControllerUnit = React.createClass({
+    handleClick: function(e) {
+
+        // 如果点击的是当前正在选中态的按钮，则翻转图片，否则将对应的图片居中
+        if (this.props.arrange.isCenter) {
+            this.props.inverse();
+        } else {
+            this.props.center();
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+    },
+    render: function() {
+        var controlelrUnitClassName = 'controller-unit';
+        // 如果对应的是居中的图片，显示控制按钮的居中态
+        if (this.props.arrange.isCenter) {
+            controlelrUnitClassName += ' is-center';
+
+            // 如果同时对应的是翻转图片， 显示控制按钮的翻转态
+            if (this.props.arrange.isInverse) {
+                controlelrUnitClassName += ' is-inverse';
+            }
+        }
+        return (<span className={controlelrUnitClassName} onClick={this.handleClick}>{this.props.data}</span>);
     }
 });
 
@@ -260,8 +287,9 @@ var AppComponent = React.createClass({
                     isCenter: false
                 };
             }
-            imgFigures.push(<ImgFigure data={value} key={index} ref={'imageFigure' + index} arrange={this.state.imgsArrangeArr[index]} center={this.center(index)} inverse={this.inverse(index)}/>)
-        }.bind(this))
+            imgFigures.push(<ImgFigure data={value} key={index} ref={'imageFigure' + index} arrange={this.state.imgsArrangeArr[index]} center={this.center(index)} inverse={this.inverse(index)}/>);
+            controllerUnits.push(<ControllerUnit data={index + 1} key = {index} arrange = {this.state.imgsArrangeArr[index]} inverse = {this.inverse(index)} center = {this.center(index)} />);
+        }.bind(this));
         return (
             <section className="stage" ref="stage">
             <section className="img-sec">
